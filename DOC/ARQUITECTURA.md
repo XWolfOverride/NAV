@@ -5,7 +5,7 @@
 ```
 NAV/
 ├── Nav.slnx              Solución (un solo proyecto)
-├── CLAUDE.md             Decisiones y estado para Claude Code
+├── AGENTS.md             Decisiones y estado para agentes de IA (CLAUDE.md solo lo importa)
 ├── README.md             Guía de uso para humanos
 ├── DOC/                  Esta documentación
 ├── src/Nav/              Código C# de la aplicación

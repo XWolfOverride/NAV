@@ -1,8 +1,8 @@
 # Documentación técnica de NAV
 
 Punto de entrada para desarrolladores y agentes de IA. Para el uso como usuario, ver el
-[README principal](../README.md). El resumen de decisiones y estado que lee Claude Code está
-en [CLAUDE.md](../CLAUDE.md).
+[README principal](../README.md). El resumen de decisiones y estado que leen los agentes de IA está
+en [AGENTS.md](../AGENTS.md).
 
 ## Qué es NAV
 
