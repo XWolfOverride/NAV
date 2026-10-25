@@ -7,3 +7,7 @@ artifacts/
 *.user
 *.suo
 .DS_Store
+
+# Binarios generados por build.sh / build.ps1
+/nav
+/nav.exe

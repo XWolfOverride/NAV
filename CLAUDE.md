@@ -19,9 +19,9 @@ codificacion CP437). Del original se conserva el concepto, no la implementacion.
 
 ## Estado
 - Compila sin errores (`dotnet build`) y `tests/Nav.Tests` (xUnit, 89 pruebas) pasa con `dotnet test`.
-  Falta probar a mano la interfaz en Windows Terminal, cmd/conhost y por SSH, y publicar con AOT.
+  Falta probar a mano la interfaz en Windows Terminal, cmd/conhost y por SSH, y ejecutar `build.sh` en Linux/macOS.
 - Repositorio git sin remoto y sin commits todavia.
 
 ## Compilar
-`dotnet build`, `dotnet test`, `dotnet run --project src/Nav`, publicacion AOT en el README.
+`dotnet build`, `dotnet test`, `dotnet run --project src/Nav`. Distribucion: sin binarios publicados; `build.sh` / `build.ps1` comprueban requisitos, compilan con AOT y dejan `nav`/`nav.exe` en la raiz (ver README).
 Documentacion tecnica en `DOC/`.

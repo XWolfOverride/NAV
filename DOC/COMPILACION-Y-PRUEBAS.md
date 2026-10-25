@@ -60,11 +60,41 @@ dotnet publish src/Nav -c Release -r linux-x64 -p:PublishAot=false -p:PublishSin
 `dotnet run` necesita una terminal real: con stdin/stdout redirigidos NAV se niega a
 arrancar (por ejemplo, no funcionará dentro de un runner sin TTY).
 
+## Scripts de autocompilación (`build.sh`, `build.ps1`)
+
+Son la vía de distribución: no se publican binarios. Un usuario ejecuta un solo comando
+(ver README) y obtiene `nav` / `nav.exe` en la raíz del proyecto.
+
+Qué hacen, en orden:
+
+1. Detectan el RID (`win-x64|arm64`, `linux-x64|arm64`, `osx-x64|arm64`).
+2. Comprueban prerrequisitos **sin instalar nada** y, si falta algo, imprimen el comando para
+   instalarlo y salen: git, SDK de .NET ≥ 10, y compilador nativo (Windows: Build Tools con
+   C++ vía `vswhere`; Linux: `clang`, `ld`, cabeceras de zlib, con sugerencias para
+   apt/dnf/pacman; macOS: Xcode Command Line Tools).
+3. Obtienen el código: si se ejecutan dentro del repo (`Nav.slnx` + `.git`) lo usan; si existe
+   `NAV/.git` lo actualizan; si no, `git clone --depth 1`. La actualización es
+   `git pull --ff-only` y **se omite si el repo no tiene ningún remoto** (caso actual).
+4. `dotnet publish src/Nav/Nav.csproj -c Release -r <RID> -o publish/nav`, copian el binario
+   a la raíz y borran `publish/`.
+5. Explican cómo instalarlo en el `PATH` y cómo cargar `shell/nav.sh` / `shell/nav.ps1`.
+
+Detalles:
+- `NAV_REPO_URL` cambia la URL del repositorio (forks). **El valor por defecto
+  (`https://github.com/XWolfOverride/NAV`) es el repositorio real; la rama es `main`.**
+  La misma URL aparece en el README.
+- `build.ps1` va dentro de una función y sale con `return`, para que `irm ... | iex` no cierre
+  la ventana de PowerShell ante un fallo. Sus mensajes no llevan tildes (codificación al
+  ejecutar vía `iex`).
+- `/nav` y `/nav.exe` están en `.gitignore` para que los binarios no aparezcan como cambios.
+- Probado: `build.ps1` en Windows 11 (genera `nav.exe` de ~1,7 MB). `build.sh` solo se ha
+  comprobado sintácticamente (`bash -n`); falta ejecutarlo en Linux y macOS.
+
 ## Plan de primera puesta en marcha
 
 1. ~~`dotnet build` y corregir errores~~ (hecho).
 2. Probar en Windows Terminal, cmd/conhost clásico y por SSH a un Linux.
-3. Publicar con AOT en cada plataforma y comprobar que arranca.
+3. Publicar con AOT: hecho en Windows con `build.ps1`; falta Linux y macOS (`build.sh`).
 4. Primer commit y, si procede, remoto.
 
 ## Lista de comprobación manual

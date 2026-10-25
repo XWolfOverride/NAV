@@ -18,30 +18,44 @@ lanzas programas y scripts, y al salir puedes quedarte en la carpeta donde estab
 > **Estado:** compila y tiene pruebas unitarias; la interfaz aún no se ha probado a mano en
 > todas las terminales (ver [DOC/COMPILACION-Y-PRUEBAS.md](DOC/COMPILACION-Y-PRUEBAS.md)).
 
-## Instalación
+## Compilar desde fuentes
 
-Requiere el SDK de .NET 10 para compilar. El binario resultante no necesita .NET instalado
-(Native AOT).
+NAV no publica binarios: se compila en tu máquina con un solo comando. El script comprueba
+que tienes lo necesario (**no instala nada**; si falta algo, te dice qué y cómo instalarlo),
+descarga la última versión, compila con Native AOT y deja el ejecutable (`nav` / `nav.exe`)
+en la raíz del proyecto. El binario no necesita .NET para ejecutarse.
 
+Necesitas: git, el SDK de .NET 10 y un compilador nativo (Visual Studio Build Tools con
+«Desarrollo para escritorio con C++» en Windows; `clang`, `zlib` y un enlazador en Linux;
+Xcode Command Line Tools en macOS).
+
+```powershell
+irm https://raw.githubusercontent.com/XWolfOverride/NAV/main/build.ps1 | iex                # Windows
 ```
-dotnet publish src/Nav -c Release -r win-x64      # Windows (con "Desarrollo para escritorio con C++" de Visual Studio)
-dotnet publish src/Nav -c Release -r linux-x64    # Linux (necesita clang y zlib1g-dev)
-dotnet publish src/Nav -c Release -r linux-arm64  # Linux ARM
-dotnet publish src/Nav -c Release -r osx-arm64    # macOS (necesita Xcode Command Line Tools)
-```
-
-Cada plataforma se compila en la propia plataforma. El ejecutable queda en
-`src/Nav/bin/Release/net10.0/<runtime>/publish/` (`nav` o `nav.exe`). Cópialo a una carpeta
-de tu `PATH`.
-
-Para probar rápido en un servidor Linux compilando desde Windows (sin AOT, un único fichero):
-
-```
-dotnet publish src/Nav -c Release -r linux-x64 -p:PublishAot=false -p:PublishSingleFile=true --self-contained
+```bash
+curl -fsSL https://raw.githubusercontent.com/XWolfOverride/NAV/main/build.sh | bash         # Linux y macOS
 ```
 
-Para desarrollar: `dotnet build` y `dotnet run --project src/Nav`.
+Crea la carpeta `NAV/` en el directorio actual. **Para actualizar a una nueva versión, vuelve a
+ejecutar el mismo comando** (o `./build.sh` / `.\build.ps1` dentro de la carpeta): hace `git pull`
+y recompila. El script termina explicando cómo instalar el ejecutable en tu `PATH`:
 
+```powershell
+# Windows (PowerShell, sin administrador); después reabre la terminal
+mkdir $HOME\bin -Force; copy nav.exe $HOME\bin
+$p = [Environment]::GetEnvironmentVariable("Path","User"); [Environment]::SetEnvironmentVariable("Path","$p;$HOME\bin","User")
+```
+```bash
+# Linux / macOS (para todos los usuarios: sudo install -m 755 nav /usr/local/bin/)
+mkdir -p ~/.local/bin && install -m 755 nav ~/.local/bin/
+```
+
+> Ejecutar un script descargado requiere confiar en él: léelo antes en [`build.sh`](build.sh) /
+> [`build.ps1`](build.ps1) o descárgalo y ejecútalo tú.
+
+Configura después el [cambio de carpeta al salir](#quedarte-en-la-carpeta-al-salir).
+
+Para desarrollar: `dotnet build`, `dotnet test` y `dotnet run --project src/Nav`.
 ## Uso
 
 ```
