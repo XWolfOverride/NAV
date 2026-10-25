@@ -1,0 +1,5 @@
+* text=auto
+*.sh text eol=lf
+*.ps1 text eol=crlf
+# Codigo original de DOS: se conserva byte a byte (CP437, CRLF)
+legacy-dos/** -text
